@@ -20,11 +20,42 @@ export default function DashboardScreen() {
 
   const dashboardData = {
     driverName: 'John Smith',
+    driverId: 'DRV-001',
+    shift: 'Morning Shift',
     totalDeliveries: 24,
     completed: 18,
     pending: 6,
     failed: 0,
+    vehicleNumber: 'ST-V001',
+    routeId: 'RT-M001',
+    estimatedCompletionTime: '4:30 PM',
   };
+
+  const todayStats = {
+    packagesDelivered: 18,
+    distanceCovered: '45.2 km',
+    timeOnRoute: '6h 15m',
+    customerRating: 4.8,
+  };
+
+  const urgentDeliveries = [
+    {
+      id: 'PKG-1001',
+      address: '123 Main St, Downtown',
+      customerName: 'Alice Johnson',
+      timeWindow: '2:00 PM - 4:00 PM',
+      priority: 'High',
+      type: 'Express',
+    },
+    {
+      id: 'PKG-1005',
+      address: '456 Oak Ave, Midtown',
+      customerName: 'Bob Wilson',
+      timeWindow: '3:00 PM - 5:00 PM',
+      priority: 'Medium',
+      type: 'Standard',
+    },
+  ];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -66,6 +97,89 @@ export default function DashboardScreen() {
             </Text>
             <Text style={styles.statsLabel}>Failed</Text>
           </View>
+        </View>
+
+        {/* Driver Info Card */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Today's Route</Text>
+          <View style={styles.infoCard}>
+            <View style={styles.infoRow}>
+              <View style={styles.infoItem}>
+                <Text style={styles.infoLabel}>Driver ID</Text>
+                <Text style={styles.infoValue}>{dashboardData.driverId}</Text>
+              </View>
+              <View style={styles.infoItem}>
+                <Text style={styles.infoLabel}>Vehicle</Text>
+                <Text style={styles.infoValue}>{dashboardData.vehicleNumber}</Text>
+              </View>
+            </View>
+            <View style={styles.infoRow}>
+              <View style={styles.infoItem}>
+                <Text style={styles.infoLabel}>Route ID</Text>
+                <Text style={styles.infoValue}>{dashboardData.routeId}</Text>
+              </View>
+              <View style={styles.infoItem}>
+                <Text style={styles.infoLabel}>Est. Completion</Text>
+                <Text style={styles.infoValue}>{dashboardData.estimatedCompletionTime}</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* Performance Stats */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Today's Performance</Text>
+          <View style={styles.performanceGrid}>
+            <View style={styles.performanceCard}>
+              <Ionicons name="speedometer" size={24} color="#3B82F6" />
+              <Text style={styles.performanceValue}>{todayStats.distanceCovered}</Text>
+              <Text style={styles.performanceLabel}>Distance</Text>
+            </View>
+            <View style={styles.performanceCard}>
+              <Ionicons name="time" size={24} color="#10B981" />
+              <Text style={styles.performanceValue}>{todayStats.timeOnRoute}</Text>
+              <Text style={styles.performanceLabel}>Time on Route</Text>
+            </View>
+            <View style={styles.performanceCard}>
+              <Ionicons name="star" size={24} color="#F59E0B" />
+              <Text style={styles.performanceValue}>{todayStats.customerRating}</Text>
+              <Text style={styles.performanceLabel}>Rating</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Urgent Deliveries */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Urgent Deliveries</Text>
+            <TouchableOpacity onPress={() => router.push('/manifest')}>
+              <Text style={styles.viewAllText}>View All</Text>
+            </TouchableOpacity>
+          </View>
+          {urgentDeliveries.map((delivery) => (
+            <View key={delivery.id} style={styles.deliveryCard}>
+              <View style={styles.deliveryHeader}>
+                <Text style={styles.deliveryId}>{delivery.id}</Text>
+                <View style={[
+                  styles.priorityBadge, 
+                  { backgroundColor: delivery.priority === 'High' ? '#FEF2F2' : '#FEF9C3' }
+                ]}>
+                  <Text style={[
+                    styles.priorityText,
+                    { color: delivery.priority === 'High' ? '#DC2626' : '#D97706' }
+                  ]}>
+                    {delivery.priority}
+                  </Text>
+                </View>
+              </View>
+              <Text style={styles.customerName}>{delivery.customerName}</Text>
+              <Text style={styles.deliveryAddress}>{delivery.address}</Text>
+              <View style={styles.deliveryFooter}>
+                <Text style={styles.timeWindow}>{delivery.timeWindow}</Text>
+                <Text style={styles.deliveryType}>{delivery.type}</Text>
+              </View>
+            </View>
+          ))}
         </View>
 
         {/* Quick Actions */}
@@ -311,6 +425,140 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   activityTime: {
+    fontSize: 12,
+    color: '#6B7280',
+  },
+  // New styles for enhanced dashboard
+  infoCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  infoItem: {
+    flex: 1,
+    marginHorizontal: 4,
+  },
+  infoLabel: {
+    fontSize: 12,
+    color: '#6B7280',
+    marginBottom: 4,
+  },
+  infoValue: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1F2937',
+  },
+  performanceGrid: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  performanceCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    width: '31%',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  performanceValue: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#1F2937',
+    marginTop: 8,
+    marginBottom: 4,
+  },
+  performanceLabel: {
+    fontSize: 12,
+    color: '#6B7280',
+    textAlign: 'center',
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  viewAllText: {
+    color: '#3B82F6',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  deliveryCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  deliveryHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  deliveryId: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#1F2937',
+  },
+  priorityBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+  },
+  priorityText: {
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  customerName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1F2937',
+    marginBottom: 4,
+  },
+  deliveryAddress: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginBottom: 8,
+  },
+  deliveryFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  timeWindow: {
+    fontSize: 12,
+    color: '#059669',
+    fontWeight: '500',
+  },
+  deliveryType: {
     fontSize: 12,
     color: '#6B7280',
   },
