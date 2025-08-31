@@ -134,8 +134,8 @@ export default function ManifestScreen() {
   };
 
   const handlePackagePress = (packageId: string) => {
-    // For now, just show an alert - we'll create package details screen later
-    console.log(`Package ${packageId} pressed`);
+    // Navigate to package details screen
+    router.push('/package-details' as any);
   };
 
   const renderPackageItem = ({ item }: { item: Package }) => (
