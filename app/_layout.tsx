@@ -17,6 +17,8 @@ export default function RootLayout() {
         <Stack.Screen name="route" />
         <Stack.Screen name="notifications" />
         <Stack.Screen name="profile" />
+        <Stack.Screen name="package-details" />
+        <Stack.Screen name="proof-of-delivery" />
       </Stack>
     </GestureHandlerRootView>
   );
