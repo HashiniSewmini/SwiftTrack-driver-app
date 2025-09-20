@@ -23,107 +23,21 @@ interface Package {
   weight: string;
   packageType: string;
   specialInstructions?: string;
-  deliveryDate: string; // Added delivery date
+  deliveryDate: string;
 }
 
-export default function ManifestScreen() {
+export default function OlderDeliveriesScreen() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<
     'All' | 'Pending' | 'Delivered' | 'Failed'
   >('All');
 
-  // Get today's date
   const today = new Date();
-  const todayString = today.toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
 
-  const packages: Package[] = [
-    {
-      id: 'PKG-1001',
-      customerName: 'Alice Johnson',
-      address: '123 Main St, Downtown, City 12345',
-      phone: '+1 (555) 123-4567',
-      timeWindow: '9:00 AM - 11:00 AM',
-      priority: 'High',
-      type: 'Express',
-      status: 'Pending',
-      weight: '2.5 kg',
-      packageType: 'Electronics',
-      specialInstructions: 'Handle with care - fragile items',
-      deliveryDate: today.toISOString().split('T')[0], // Today's date
-    },
-    {
-      id: 'PKG-1002',
-      customerName: 'Bob Wilson',
-      address: '456 Oak Ave, Midtown, City 12346',
-      phone: '+1 (555) 234-5678',
-      timeWindow: '10:00 AM - 12:00 PM',
-      priority: 'Medium',
-      type: 'Standard',
-      status: 'Delivered',
-      weight: '1.2 kg',
-      packageType: 'Documents',
-      deliveryDate: today.toISOString().split('T')[0], // Today's date
-    },
-    {
-      id: 'PKG-1003',
-      customerName: 'Carol Davis',
-      address: '789 Pine Rd, Uptown, City 12347',
-      phone: '+1 (555) 345-6789',
-      timeWindow: '1:00 PM - 3:00 PM',
-      priority: 'Low',
-      type: 'Economy',
-      status: 'Pending',
-      weight: '5.0 kg',
-      packageType: 'Clothing',
-      deliveryDate: today.toISOString().split('T')[0], // Today's date
-    },
-    {
-      id: 'PKG-1004',
-      customerName: 'David Brown',
-      address: '321 Elm St, Suburban, City 12348',
-      phone: '+1 (555) 456-7890',
-      timeWindow: '2:00 PM - 4:00 PM',
-      priority: 'High',
-      type: 'Express',
-      status: 'Pending',
-      weight: '3.1 kg',
-      packageType: 'Medical',
-      specialInstructions: 'Requires signature - medical supplies',
-      deliveryDate: today.toISOString().split('T')[0], // Today's date
-    },
-    {
-      id: 'PKG-1005',
-      customerName: 'Eva Martinez',
-      address: '654 Birch Ave, Westside, City 12349',
-      phone: '+1 (555) 567-8901',
-      timeWindow: '3:00 PM - 5:00 PM',
-      priority: 'Medium',
-      type: 'Standard',
-      status: 'Failed',
-      weight: '0.8 kg',
-      packageType: 'Books',
-      deliveryDate: today.toISOString().split('T')[0], // Today's date
-    },
-    {
-      id: 'PKG-1006',
-      customerName: 'Frank Miller',
-      address: '987 Cedar Ln, Eastside, City 12350',
-      phone: '+1 (555) 678-9012',
-      timeWindow: '4:00 PM - 6:00 PM',
-      priority: 'Low',
-      type: 'Economy',
-      status: 'Pending',
-      weight: '4.2 kg',
-      packageType: 'Home Goods',
-      deliveryDate: today.toISOString().split('T')[0], // Today's date
-    },
-    // Add some older delivery examples
+  // All packages including older ones
+  const allPackages: Package[] = [
+    // Yesterday's deliveries
     {
       id: 'PKG-0998',
       customerName: 'John Smith',
@@ -137,10 +51,26 @@ export default function ManifestScreen() {
       packageType: 'Books',
       deliveryDate: new Date(today.getTime() - 24 * 60 * 60 * 1000)
         .toISOString()
-        .split('T')[0], // Yesterday
+        .split('T')[0],
     },
     {
-      id: 'PKG-0999',
+      id: 'PKG-0997',
+      customerName: 'Sarah Wilson',
+      address: '333 Past Ave, City 12347',
+      phone: '+1 (555) 555-6666',
+      timeWindow: '1:00 PM - 3:00 PM',
+      priority: 'High',
+      type: 'Express',
+      status: 'Delivered',
+      weight: '2.2 kg',
+      packageType: 'Electronics',
+      deliveryDate: new Date(today.getTime() - 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split('T')[0],
+    },
+    // 2 days ago
+    {
+      id: 'PKG-0996',
       customerName: 'Jane Doe',
       address: '222 Last Week Ave, City 12346',
       phone: '+1 (555) 333-4444',
@@ -152,22 +82,71 @@ export default function ManifestScreen() {
       packageType: 'Clothing',
       deliveryDate: new Date(today.getTime() - 2 * 24 * 60 * 60 * 1000)
         .toISOString()
-        .split('T')[0], // 2 days ago
+        .split('T')[0],
+    },
+    {
+      id: 'PKG-0995',
+      customerName: 'Mike Johnson',
+      address: '444 Historic Blvd, City 12348',
+      phone: '+1 (555) 777-8888',
+      timeWindow: '10:00 AM - 12:00 PM',
+      priority: 'Medium',
+      type: 'Standard',
+      status: 'Failed',
+      weight: '1.8 kg',
+      packageType: 'Documents',
+      deliveryDate: new Date(today.getTime() - 2 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split('T')[0],
+    },
+    // 3 days ago
+    {
+      id: 'PKG-0994',
+      customerName: 'Lisa Davis',
+      address: '555 Old Street, City 12349',
+      phone: '+1 (555) 999-0000',
+      timeWindow: '3:00 PM - 5:00 PM',
+      priority: 'High',
+      type: 'Express',
+      status: 'Delivered',
+      weight: '4.1 kg',
+      packageType: 'Medical',
+      specialInstructions: 'Temperature sensitive medical supplies',
+      deliveryDate: new Date(today.getTime() - 3 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split('T')[0],
+    },
+    // Last week
+    {
+      id: 'PKG-0990',
+      customerName: 'Robert Brown',
+      address: '666 Ancient Road, City 12350',
+      phone: '+1 (555) 111-0000',
+      timeWindow: '11:00 AM - 1:00 PM',
+      priority: 'Low',
+      type: 'Economy',
+      status: 'Delivered',
+      weight: '5.5 kg',
+      packageType: 'Home Goods',
+      deliveryDate: new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split('T')[0],
     },
   ];
 
-  const filteredPackages = packages.filter((pkg) => {
+  // Filter packages to exclude today's deliveries
+  const olderPackages = allPackages.filter((pkg) => {
+    const todayDateString = today.toISOString().split('T')[0];
+    return pkg.deliveryDate !== todayDateString;
+  });
+
+  const filteredPackages = olderPackages.filter((pkg) => {
     const matchesSearch =
       pkg.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       pkg.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
       pkg.address.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFilter = filterStatus === 'All' || pkg.status === filterStatus;
-
-    // Filter for today's deliveries only
-    const todayDateString = today.toISOString().split('T')[0];
-    const isToday = pkg.deliveryDate === todayDateString;
-
-    return matchesSearch && matchesFilter && isToday;
+    return matchesSearch && matchesFilter;
   });
 
   const getStatusColor = (status: string) => {
@@ -196,8 +175,29 @@ export default function ManifestScreen() {
     }
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 1) {
+      return 'Yesterday';
+    } else if (diffDays < 7) {
+      return `${diffDays} days ago`;
+    } else if (diffDays < 30) {
+      const weeks = Math.floor(diffDays / 7);
+      return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
+    } else {
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
+    }
+  };
+
   const handlePackagePress = (packageId: string) => {
-    // Navigate to package details screen
     router.push('/package-details' as any);
   };
 
@@ -207,7 +207,12 @@ export default function ManifestScreen() {
       onPress={() => handlePackagePress(item.id)}
     >
       <View style={styles.packageHeader}>
-        <Text style={styles.packageId}>{item.id}</Text>
+        <View style={styles.packageTitleRow}>
+          <Text style={styles.packageId}>{item.id}</Text>
+          <Text style={styles.deliveryDate}>
+            {formatDate(item.deliveryDate)}
+          </Text>
+        </View>
         <View style={styles.badgeContainer}>
           <View
             style={[
@@ -278,8 +283,8 @@ export default function ManifestScreen() {
           <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
         <View style={styles.headerCenter}>
-          <Text style={styles.headerTitle}>Today's Deliveries</Text>
-          <Text style={styles.headerDate}>{todayString}</Text>
+          <Text style={styles.headerTitle}>Older Deliveries</Text>
+          <Text style={styles.headerSubtitle}>Previous delivery history</Text>
         </View>
         <TouchableOpacity style={styles.refreshButton}>
           <Ionicons name="refresh" size={24} color="#FFFFFF" />
@@ -297,7 +302,7 @@ export default function ManifestScreen() {
           />
           <TextInput
             style={styles.searchInput}
-            placeholder="Search packages, customers, or addresses..."
+            placeholder="Search older deliveries..."
             value={searchQuery}
             onChangeText={setSearchQuery}
             placeholderTextColor="#9CA3AF"
@@ -330,73 +335,28 @@ export default function ManifestScreen() {
         {/* Summary Stats */}
         <View style={styles.summaryContainer}>
           <View style={styles.summaryItem}>
-            <Text style={styles.summaryNumber}>
-              {
-                packages.filter(
-                  (p) => p.deliveryDate === today.toISOString().split('T')[0]
-                ).length
-              }
-            </Text>
+            <Text style={styles.summaryNumber}>{olderPackages.length}</Text>
             <Text style={styles.summaryLabel}>Total</Text>
           </View>
           <View style={styles.summaryItem}>
-            <Text style={[styles.summaryNumber, { color: '#F59E0B' }]}>
-              {
-                packages.filter(
-                  (p) =>
-                    p.status === 'Pending' &&
-                    p.deliveryDate === today.toISOString().split('T')[0]
-                ).length
-              }
-            </Text>
-            <Text style={styles.summaryLabel}>Pending</Text>
-          </View>
-          <View style={styles.summaryItem}>
             <Text style={[styles.summaryNumber, { color: '#10B981' }]}>
-              {
-                packages.filter(
-                  (p) =>
-                    p.status === 'Delivered' &&
-                    p.deliveryDate === today.toISOString().split('T')[0]
-                ).length
-              }
+              {olderPackages.filter((p) => p.status === 'Delivered').length}
             </Text>
             <Text style={styles.summaryLabel}>Delivered</Text>
           </View>
           <View style={styles.summaryItem}>
             <Text style={[styles.summaryNumber, { color: '#EF4444' }]}>
-              {
-                packages.filter(
-                  (p) =>
-                    p.status === 'Failed' &&
-                    p.deliveryDate === today.toISOString().split('T')[0]
-                ).length
-              }
+              {olderPackages.filter((p) => p.status === 'Failed').length}
             </Text>
             <Text style={styles.summaryLabel}>Failed</Text>
           </View>
-        </View>
-
-        {/* Older Deliveries Section */}
-        <TouchableOpacity
-          style={styles.olderDeliveriesCard}
-          onPress={() => router.push('/older-deliveries' as any)}
-        >
-          <View style={styles.olderDeliveriesContent}>
-            <View style={styles.olderDeliveriesLeft}>
-              <Ionicons name="calendar-outline" size={24} color="#6B7280" />
-              <View style={styles.olderDeliveriesText}>
-                <Text style={styles.olderDeliveriesTitle}>
-                  View Older Deliveries
-                </Text>
-                <Text style={styles.olderDeliveriesSubtitle}>
-                  Browse previous delivery records and history
-                </Text>
-              </View>
-            </View>
-            <Ionicons name="chevron-forward" size={20} color="#6B7280" />
+          <View style={styles.summaryItem}>
+            <Text style={[styles.summaryNumber, { color: '#F59E0B' }]}>
+              {olderPackages.filter((p) => p.status === 'Pending').length}
+            </Text>
+            <Text style={styles.summaryLabel}>Pending</Text>
           </View>
-        </TouchableOpacity>
+        </View>
 
         {/* Package List */}
         <FlatList
@@ -405,6 +365,17 @@ export default function ManifestScreen() {
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.listContainer}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Ionicons name="calendar-outline" size={64} color="#9CA3AF" />
+              <Text style={styles.emptyTitle}>No older deliveries found</Text>
+              <Text style={styles.emptySubtitle}>
+                {searchQuery || filterStatus !== 'All'
+                  ? 'Try adjusting your search or filter criteria'
+                  : 'Previous deliveries will appear here'}
+              </Text>
+            </View>
+          }
         />
       </View>
     </SafeAreaView>
@@ -417,7 +388,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8FAFC',
   },
   header: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#6B7280',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
@@ -426,17 +397,17 @@ const styles = StyleSheet.create({
   backButton: {
     padding: 8,
   },
+  headerCenter: {
+    flex: 1,
+    alignItems: 'center',
+  },
   headerTitle: {
     color: '#FFFFFF',
     fontSize: 20,
     fontWeight: 'bold',
   },
-  headerCenter: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  headerDate: {
-    color: '#DBEAFE',
+  headerSubtitle: {
+    color: '#D1D5DB',
     fontSize: 12,
     marginTop: 2,
   },
@@ -484,7 +455,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   filterButtonActive: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#6B7280',
   },
   filterButtonText: {
     fontSize: 14,
@@ -539,20 +510,30 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+    opacity: 0.95, // Slightly transparent for older deliveries
   },
   packageHeader: {
+    marginBottom: 12,
+  },
+  packageTitleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 8,
   },
   packageId: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#1F2937',
   },
+  deliveryDate: {
+    fontSize: 12,
+    color: '#6B7280',
+    fontStyle: 'italic',
+  },
   badgeContainer: {
     flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
   priorityBadge: {
     paddingHorizontal: 8,
@@ -620,42 +601,22 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     fontWeight: '500',
   },
-  olderDeliveriesCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  olderDeliveriesContent: {
-    flexDirection: 'row',
+  emptyContainer: {
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    paddingVertical: 60,
   },
-  olderDeliveriesLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  olderDeliveriesText: {
-    marginLeft: 12,
-    flex: 1,
-  },
-  olderDeliveriesTitle: {
-    fontSize: 16,
+  emptyTitle: {
+    fontSize: 18,
     fontWeight: '600',
-    color: '#1F2937',
-    marginBottom: 2,
-  },
-  olderDeliveriesSubtitle: {
-    fontSize: 14,
     color: '#6B7280',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  emptySubtitle: {
+    fontSize: 14,
+    color: '#9CA3AF',
+    textAlign: 'center',
+    paddingHorizontal: 32,
   },
 });

@@ -13,10 +13,24 @@ import {
 
 export default function DashboardScreen() {
   const router = useRouter();
+  const [dropdownVisible, setDropdownVisible] = React.useState(false);
 
   const handleLogout = () => {
+    setDropdownVisible(false);
     router.replace('/');
   };
+
+  const handleProfile = () => {
+    setDropdownVisible(false);
+    router.push('/profile');
+  };
+
+  const handleNotifications = () => {
+    router.push('/notifications');
+  };
+
+  // Mock notification data to show unread count
+  const unreadNotifications = 3;
 
   const dashboardData = {
     driverName: 'John Smith',
@@ -60,23 +74,81 @@ export default function DashboardScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#3B82F6" />
-      
+
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <Text style={styles.welcomeText}>Welcome back,</Text>
           <Text style={styles.driverName}>{dashboardData.driverName}</Text>
         </View>
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Ionicons name="log-out-outline" size={24} color="#FFFFFF" />
-        </TouchableOpacity>
+        <View style={styles.headerRight}>
+          <TouchableOpacity
+            style={styles.notificationIcon}
+            onPress={handleNotifications}
+          >
+            <Ionicons name="notifications-outline" size={28} color="#FFFFFF" />
+            {unreadNotifications > 0 && (
+              <View style={styles.notificationBadge}>
+                <Text style={styles.notificationBadgeText}>
+                  {unreadNotifications > 9 ? '9+' : unreadNotifications}
+                </Text>
+              </View>
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.profileIcon}
+            onPress={() => setDropdownVisible((v) => !v)}
+          >
+            <Ionicons name="person-outline" size={28} color="#FFFFFF" />
+            <Ionicons
+              name={dropdownVisible ? 'chevron-up' : 'chevron-down'}
+              size={20}
+              color="#FFFFFF"
+              style={{ marginLeft: 4 }}
+            />
+          </TouchableOpacity>
+          {dropdownVisible && (
+            <View style={styles.dropdownMenu}>
+              <TouchableOpacity
+                style={[styles.dropdownItem, { backgroundColor: '#EFF6FF' }]}
+                onPress={handleProfile}
+              >
+                <Ionicons
+                  name="person-outline"
+                  size={20}
+                  color="#2563EB"
+                  style={{ marginRight: 8 }}
+                />
+                <Text style={[styles.dropdownText, { color: '#2563EB' }]}>
+                  Profile
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.dropdownItem, { backgroundColor: '#FEF2F2' }]}
+                onPress={handleLogout}
+              >
+                <Ionicons
+                  name="log-out-outline"
+                  size={20}
+                  color="#DC2626"
+                  style={{ marginRight: 8 }}
+                />
+                <Text style={[styles.dropdownText, { color: '#DC2626' }]}>
+                  Logout
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Stats Cards */}
+        {/* Stats Cards
         <View style={styles.statsContainer}>
           <View style={styles.statsCard}>
-            <Text style={styles.statsNumber}>{dashboardData.totalDeliveries}</Text>
+            <Text style={styles.statsNumber}>
+              {dashboardData.totalDeliveries}
+            </Text>
             <Text style={styles.statsLabel}>Total Deliveries</Text>
           </View>
           <View style={styles.statsCard}>
@@ -97,6 +169,36 @@ export default function DashboardScreen() {
             </Text>
             <Text style={styles.statsLabel}>Failed</Text>
           </View>
+        </View> */}
+
+        {/* Quick Actions */}
+        <View style={styles.section}>
+          {/* <Text style={styles.sectionTitle}>Quick Actions</Text> */}
+          <View style={styles.actionsGrid}>
+            <TouchableOpacity
+              style={styles.actionCard}
+              onPress={() => router.push('/manifest')}
+            >
+              <View style={[styles.actionIcon, { backgroundColor: '#3B82F6' }]}>
+                <Ionicons name="list-outline" size={28} color="#FFFFFF" />
+              </View>
+              <Text style={styles.actionTitle}>Today's Deliveries</Text>
+              <Text style={styles.actionSubtitle}>View today's packages</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.actionCard}
+              onPress={() => router.push('/route')}
+            >
+              <View style={[styles.actionIcon, { backgroundColor: '#10B981' }]}>
+                <Ionicons name="map-outline" size={28} color="#FFFFFF" />
+              </View>
+              <Text style={styles.actionTitle}>Route Map</Text>
+              <Text style={styles.actionSubtitle}>
+                Optimized delivery route
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Driver Info Card */}
@@ -110,7 +212,9 @@ export default function DashboardScreen() {
               </View>
               <View style={styles.infoItem}>
                 <Text style={styles.infoLabel}>Vehicle</Text>
-                <Text style={styles.infoValue}>{dashboardData.vehicleNumber}</Text>
+                <Text style={styles.infoValue}>
+                  {dashboardData.vehicleNumber}
+                </Text>
               </View>
             </View>
             <View style={styles.infoRow}>
@@ -120,33 +224,41 @@ export default function DashboardScreen() {
               </View>
               <View style={styles.infoItem}>
                 <Text style={styles.infoLabel}>Est. Completion</Text>
-                <Text style={styles.infoValue}>{dashboardData.estimatedCompletionTime}</Text>
+                <Text style={styles.infoValue}>
+                  {dashboardData.estimatedCompletionTime}
+                </Text>
               </View>
             </View>
           </View>
         </View>
 
-        {/* Performance Stats */}
+        {/* Performance Stats
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Today's Performance</Text>
           <View style={styles.performanceGrid}>
             <View style={styles.performanceCard}>
               <Ionicons name="speedometer" size={24} color="#3B82F6" />
-              <Text style={styles.performanceValue}>{todayStats.distanceCovered}</Text>
+              <Text style={styles.performanceValue}>
+                {todayStats.distanceCovered}
+              </Text>
               <Text style={styles.performanceLabel}>Distance</Text>
             </View>
             <View style={styles.performanceCard}>
               <Ionicons name="time" size={24} color="#10B981" />
-              <Text style={styles.performanceValue}>{todayStats.timeOnRoute}</Text>
+              <Text style={styles.performanceValue}>
+                {todayStats.timeOnRoute}
+              </Text>
               <Text style={styles.performanceLabel}>Time on Route</Text>
             </View>
             <View style={styles.performanceCard}>
               <Ionicons name="star" size={24} color="#F59E0B" />
-              <Text style={styles.performanceValue}>{todayStats.customerRating}</Text>
+              <Text style={styles.performanceValue}>
+                {todayStats.customerRating}
+              </Text>
               <Text style={styles.performanceLabel}>Rating</Text>
             </View>
           </View>
-        </View>
+        </View> */}
 
         {/* Urgent Deliveries */}
         <View style={styles.section}>
@@ -160,14 +272,24 @@ export default function DashboardScreen() {
             <View key={delivery.id} style={styles.deliveryCard}>
               <View style={styles.deliveryHeader}>
                 <Text style={styles.deliveryId}>{delivery.id}</Text>
-                <View style={[
-                  styles.priorityBadge, 
-                  { backgroundColor: delivery.priority === 'High' ? '#FEF2F2' : '#FEF9C3' }
-                ]}>
-                  <Text style={[
-                    styles.priorityText,
-                    { color: delivery.priority === 'High' ? '#DC2626' : '#D97706' }
-                  ]}>
+                <View
+                  style={[
+                    styles.priorityBadge,
+                    {
+                      backgroundColor:
+                        delivery.priority === 'High' ? '#FEF2F2' : '#FEF9C3',
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.priorityText,
+                      {
+                        color:
+                          delivery.priority === 'High' ? '#DC2626' : '#D97706',
+                      },
+                    ]}
+                  >
                     {delivery.priority}
                   </Text>
                 </View>
@@ -182,86 +304,48 @@ export default function DashboardScreen() {
           ))}
         </View>
 
-        {/* Quick Actions */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Quick Actions</Text>
-          <View style={styles.actionsGrid}>
-            <TouchableOpacity 
-              style={styles.actionCard}
-              onPress={() => router.push('/manifest')}
-            >
-              <View style={[styles.actionIcon, { backgroundColor: '#3B82F6' }]}>
-                <Ionicons name="list-outline" size={28} color="#FFFFFF" />
-              </View>
-              <Text style={styles.actionTitle}>Delivery Manifest</Text>
-              <Text style={styles.actionSubtitle}>View today's deliveries</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-              style={styles.actionCard}
-              onPress={() => router.push('/route')}
-            >
-              <View style={[styles.actionIcon, { backgroundColor: '#10B981' }]}>
-                <Ionicons name="map-outline" size={28} color="#FFFFFF" />
-              </View>
-              <Text style={styles.actionTitle}>Route Map</Text>
-              <Text style={styles.actionSubtitle}>Optimized delivery route</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-              style={styles.actionCard}
-              onPress={() => router.push('/notifications')}
-            >
-              <View style={[styles.actionIcon, { backgroundColor: '#F59E0B' }]}>
-                <Ionicons name="notifications-outline" size={28} color="#FFFFFF" />
-              </View>
-              <Text style={styles.actionTitle}>Notifications</Text>
-              <Text style={styles.actionSubtitle}>Updates & alerts</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-              style={styles.actionCard}
-              onPress={() => router.push('/profile')}
-            >
-              <View style={[styles.actionIcon, { backgroundColor: '#8B5CF6' }]}>
-                <Ionicons name="person-outline" size={28} color="#FFFFFF" />
-              </View>
-              <Text style={styles.actionTitle}>Profile</Text>
-              <Text style={styles.actionSubtitle}>Driver settings</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
         {/* Recent Activity */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Recent Activity</Text>
           <View style={styles.activityCard}>
             <View style={styles.activityItem}>
-              <View style={[styles.activityIcon, { backgroundColor: '#10B981' }]}>
+              <View
+                style={[styles.activityIcon, { backgroundColor: '#10B981' }]}
+              >
                 <Ionicons name="checkmark" size={16} color="#FFFFFF" />
               </View>
               <View style={styles.activityContent}>
-                <Text style={styles.activityTitle}>Package #PKG-001 delivered</Text>
+                <Text style={styles.activityTitle}>
+                  Package #PKG-001 delivered
+                </Text>
                 <Text style={styles.activityTime}>2 minutes ago</Text>
               </View>
             </View>
-            
+
             <View style={styles.activityItem}>
-              <View style={[styles.activityIcon, { backgroundColor: '#3B82F6' }]}>
+              <View
+                style={[styles.activityIcon, { backgroundColor: '#3B82F6' }]}
+              >
                 <Ionicons name="car" size={16} color="#FFFFFF" />
               </View>
               <View style={styles.activityContent}>
-                <Text style={styles.activityTitle}>Route updated with 2 new deliveries</Text>
+                <Text style={styles.activityTitle}>
+                  Route updated with 2 new deliveries
+                </Text>
                 <Text style={styles.activityTime}>15 minutes ago</Text>
               </View>
             </View>
-            
+
             <View style={styles.activityItem}>
-              <View style={[styles.activityIcon, { backgroundColor: '#F59E0B' }]}>
+              <View
+                style={[styles.activityIcon, { backgroundColor: '#F59E0B' }]}
+              >
                 <Ionicons name="alert-circle" size={16} color="#FFFFFF" />
               </View>
               <View style={styles.activityContent}>
-                <Text style={styles.activityTitle}>High priority delivery assigned</Text>
+                <Text style={styles.activityTitle}>
+                  High priority delivery assigned
+                </Text>
                 <Text style={styles.activityTime}>30 minutes ago</Text>
               </View>
             </View>
@@ -284,9 +368,75 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    position: 'relative',
+    zIndex: 1000,
   },
   headerLeft: {
     flex: 1,
+  },
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  profileIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 8,
+    backgroundColor: 'rgba(59,130,246,0.15)',
+    borderRadius: 20,
+  },
+  notificationIcon: {
+    position: 'relative',
+    padding: 8,
+    backgroundColor: 'rgba(245,158,11,0.15)',
+    borderRadius: 20,
+    marginRight: 12,
+  },
+  notificationBadge: {
+    position: 'absolute',
+    top: 4,
+    right: 4,
+    backgroundColor: '#EF4444',
+    borderRadius: 8,
+    minWidth: 16,
+    height: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#3B82F6',
+  },
+  notificationBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  dropdownMenu: {
+    position: 'absolute',
+    top: 48,
+    right: 0,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 5,
+    minWidth: 140,
+    zIndex: 10,
+  },
+  dropdownItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+  },
+  dropdownText: {
+    fontSize: 16,
+    color: '#1F2937',
+    fontWeight: '500',
   },
   welcomeText: {
     color: '#DBEAFE',
@@ -297,9 +447,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
-  logoutButton: {
-    padding: 8,
-  },
+  // Removed logoutButton style
   content: {
     flex: 1,
     padding: 20,
