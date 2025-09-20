@@ -232,7 +232,7 @@ export default function DashboardScreen() {
           </View>
         </View>
 
-        {/* Performance Stats */}
+        {/* Performance Stats
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Today's Performance</Text>
           <View style={styles.performanceGrid}>
@@ -258,7 +258,7 @@ export default function DashboardScreen() {
               <Text style={styles.performanceLabel}>Rating</Text>
             </View>
           </View>
-        </View>
+        </View> */}
 
         {/* Urgent Deliveries */}
         <View style={styles.section}>
